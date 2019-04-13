@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        
+        <h2>Calculation Trainer</h2>
+        
+ <script>
+    var nm1=new Array(30)
+    var nm2=new Array(30)
+    var opr=new Array(30)
+    var rst=new Array(30)
+    var i;
+    var prb=0;
+    function getRndInteger(min, max)
+    {
+        return Math.floor(Math.random() * (max - min) ) + min;
+    }
+    function getOperator(num)
+    {
+        switch(num)
+            {
+                case 0:
+                return " + ";
+                break;
+                case 1:
+                return " − ";
+                break;
+                case 2:
+                return " × ";
+                break;
+                default:
+                return " ÷ ";
+
+            }
+    }
+    function GenProblem()
+    {
+        if(prb==1)
+        {
+            if (! confirm('Do you want to generate problems again?'))
+                return;
+        }
+        prb=1;
+        var rg=parseInt(document.getElementById('Range').value);
+        // var rgg;
+        for (i = 0; i < 30; i++)
+        {
+            // rgg=getRndInteger(1,rg);
+            switch(rg)
+            {
+                case 4:
+                nm1[i]=getRndInteger(1000,10000);
+                  break;
+                case 3:
+                nm1[i]=getRndInteger(100,1000);
+                  break;
+                case 2:
+                nm1[i]=getRndInteger(10,100);
+                  break;
+                default:
+                nm1[i]=getRndInteger(2,10);
+            }
+            opr[i]=getRndInteger(0,4);
+            if(opr[i]==0 || opr[i]==1) //puls/minus
+            {
+                // rgg=getRndInteger(1,rg);
+                switch(rg)
+                {
+                    case 4:
+                    nm2[i]=getRndInteger(1000,10000);
+                      break;
+                    case 3:
+                    nm2[i]=getRndInteger(100,1000);
+                      break;
+                    case 2:
+                    nm2[i]=getRndInteger(10,100);
+                      break;
+                    default:
+                    nm2[i]=getRndInteger(2,10);
+                }
+                rst[i]=nm1[i]+nm2[i];
+            }
+            else
+            {
+                nm2[i]=getRndInteger(2,10);
+                rst[i]=nm1[i]*nm2[i];
+            }
+            
+            if(opr[i]!=3)
+            {
+                rgg=getRndInteger(0,2);
+                if(rgg==0)
+                {
+                    rgg=nm1[i];
+                    nm1[i]=nm2[i];
+                    nm2[i]=rgg;
+                }
+            }
+
+
+            if(opr[i]==1 || opr[i]==3)
+            {
+                rgg=nm1[i];
+                nm1[i]=rst[i];
+                rst[i]=rgg;
+            }
+            
+            document.getElementById("opr"+i.toString(10)).innerHTML =  nm1[i].toString()+getOperator(opr[i])+nm2[i]+ " = ";
+        }
+    }
+    function ShowAns()
+    {
+        var rss;
+        if(prb==0)
+        {
+            alert("Please generate problems first!");
+        }
+        else if (confirm('Show the keys?'))
+        {
+            for (i = 0; i < 30; i++)
+            {
+                document.getElementById("ras"+i.toString(10)).innerHTML = rst[i];
+                rss=document.getElementById("rst"+i.toString(10)).value;
+                if(rss!="")
+                {
+                    if(parseInt(rss)==rst[i])
+                        document.getElementById("rst"+i.toString(10)).style = "color:green";
+                    else
+                        document.getElementById("rst"+i.toString(10)).style = "color:red";
+                }
+            }
+        }
+    }
+</script>
+<div class="slidecontainer">
+    Range:  
+    <input type="range" min="1" max="4" value="2" class="slider" id="Range">
+</div>
+<button type="button"
+onclick="GenProblem();">
+Generate Problems</button>
+<button type="button"
+onclick="ShowAns();">
+Show Answer</button>
+
+
+<script>
+    document.write("<table>\n");
+    for (i = 0; i < 30; i++)
+    { 
+        document.write("<tr>\n");
+        document.write("<td id=\"opr"+i.toString(10)+"\">???</td>\n");
+        document.write("<td><input type=\"text\" id=\"rst"+i.toString(10)+"\" value=\"\"         > </td>\n");
+        document.write("<td id=\"ras"+i.toString(10)+"\"></td>\n");
+        document.write("<tr>\n");
+    }
+    document.write("<table>\n");
+</script>
+
+</body>
+</html> 
