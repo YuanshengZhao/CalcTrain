@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
-    <body>
+<body>
         
-        <h2>Mental Arithmetic Trainer</h2>
+    <h2>Mental Arithmetic Trainer</h2>
         
  <script>
-    var nm1=new Array(30)
-    var nm2=new Array(30)
-    var opr=new Array(30)
-    var rst=new Array(30)
+    var nm1=new Array(30);
+    var nm2=new Array(30);
+    var opr=new Array(30);
+    var rst=new Array(30);
+    var pwr=new Array(30);
     var i;
     var prb=0;
+    var dmpnt;
     function getRndInteger(min, max)
     {
         return Math.floor(Math.random() * (max - min) ) + min;
@@ -33,14 +35,26 @@
 
             }
     }
+    function pow10(xx)
+    {
+        var ii,yy;
+        yy=1;
+        for(ii=0;ii<xx;ii++)
+        {            
+            yy*=10;
+        }
+        return yy;
+    }
     function GenProblem()
     {
+        var temp;
         if(prb==1)
         {
             if (! confirm('Do you want to generate problems again?'))
                 return;
         }
         prb=1;
+        dmpnt=document.getElementById("myCheck").checked;
         var rg=parseInt(document.getElementById('Range').value);
         // var rgg;
         for (i = 0; i < 30; i++)
@@ -48,9 +62,6 @@
             // rgg=getRndInteger(1,rg);
             switch(rg)
             {
-                case 4:
-                nm1[i]=getRndInteger(1000,10000);
-                  break;
                 case 3:
                 nm1[i]=getRndInteger(100,1000);
                   break;
@@ -66,9 +77,6 @@
                 // rgg=getRndInteger(1,rg);
                 switch(rg)
                 {
-                    case 4:
-                    nm2[i]=getRndInteger(1000,10000);
-                      break;
                     case 3:
                     nm2[i]=getRndInteger(100,1000);
                       break;
@@ -104,16 +112,87 @@
                 nm1[i]=rst[i];
                 rst[i]=rgg;
             }
+
+            if(dmpnt)
+            {
+                if(opr[i]<2)
+                {
+                    rgg=getRndInteger(0,5);
+                    temp=pow10(rgg);
+                    if(getRndInteger(0,2)==1)
+                    {
+                        nm1[i]*=temp;
+                        nm2[i]*=temp;
+                        rst[i]*=temp;
+                        pwr[i]=rgg;
+                    }
+                    else
+                    {
+                        nm1[i]/=temp;
+                        nm2[i]/=temp;
+                        rst[i]/=temp;
+                        pwr[i]=-rgg;
+                    }
+                }
+                else
+                {
+                    rgg=getRndInteger(0,4);
+                    temp=pow10(rgg);
+                    if(getRndInteger(0,2)==1)
+                    {
+                        nm1[i]*=temp;
+                        rst[i]*=temp;
+                        pwr[i]=rgg;
+                    }
+                    else
+                    {
+                        nm1[i]/=temp;
+                        rst[i]/=temp;
+                        pwr[i]=-rgg;
+                    }
+                    rgg=getRndInteger(0,4);
+                    temp=pow10(rgg);
+                    if(getRndInteger(0,2)==1)
+                    {
+                        nm2[i]*=temp;
+                        if(opr[i]>2)
+                        {
+                            rst[i]/=temp;
+                            pwr[i]-=rgg;
+                        }
+                        else
+                        {
+                            rst[i]*=temp;
+                            pwr[i]+=rgg;
+                        }
+                    }
+                    else
+                    {
+                        nm2[i]/=temp;
+                        if(opr[i]>2)
+                        {
+                            rst[i]*=temp;
+                            pwr[i]+=rgg;
+                        }
+                        else
+                        {
+                            rst[i]/=temp;
+                            pwr[i]-=rgg;
+                        }
+                    }
+                }
+            }
+
             
-            document.getElementById("opr"+i.toString(10)).innerHTML =  nm1[i].toString()+getOperator(opr[i])+nm2[i]+ " = ";
-            document.getElementById("rst"+i.toString(10)).style = "color:black";
-            document.getElementById("rst"+i.toString(10)). value = "";
-            document.getElementById("ras"+i.toString(10)).innerHTML = "";
+            document.getElementById("opr"+i.toString()).innerHTML =  nm1[i].toString()+getOperator(opr[i])+nm2[i].toString()+ " = ";
+            document.getElementById("rst"+i.toString()).style = "color:black";
+            document.getElementById("rst"+i.toString()). value = "";
+            document.getElementById("ras"+i.toString()).innerHTML = "";
         }
     }
     function ShowAns()
     {
-        var rss;
+        var rss,rasstr;
         if(prb==0)
         {
             alert("Please generate problems first!");
@@ -122,11 +201,17 @@
         {
             for (i = 0; i < 30; i++)
             {
-                document.getElementById("ras"+i.toString(10)).innerHTML = rst[i];
+                if(pwr[i]<0)
+                    rasstr=(Math.round(rst[i]*pow10(-pwr[i]))/pow10(-pwr[i])).toString()
+                else
+                    rasstr=rst[i].toString();
+
+                document.getElementById("ras"+i.toString(10)).innerHTML = /*rst[i].toString()+" "+pwr[i].toString()+" "+*/rasstr;
+
                 rss=document.getElementById("rst"+i.toString(10)).value;
                 if(rss!="")
                 {
-                    if(parseInt(rss)==rst[i])
+                    if(rss==rasstr)
                         document.getElementById("rst"+i.toString(10)).style = "color:green";
                     else
                         document.getElementById("rst"+i.toString(10)).style = "color:red";
@@ -135,13 +220,28 @@
         }
     }
 </script>
-<div class="slidecontainer">
-    Range:  
-    <input type="range" min="1" max="4" value="2" class="slider" id="Range">
-</div>
+
+<table>
+<tr>
+<td>Level <span id="lvl"></span></td>
+<td><input type="range" min="1" max="3" value="2" class="slider" id="Range"></td>
+<tr>
+<table>
+<input type="checkbox" id="myCheck"> Decimal Point<br>
+
+<script>
+    var slider = document.getElementById("Range");
+    var output = document.getElementById("lvl");
+    output.innerHTML = slider.value;
+    slider.oninput = function() {
+      output.innerHTML = this.value;
+    }
+</script>
+
 <button type="button"
 onclick="GenProblem();">
 Generate Problems</button>
+
 <button type="button"
 onclick="ShowAns();">
 Show Answer</button>
