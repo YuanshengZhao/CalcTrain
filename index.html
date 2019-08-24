@@ -63,13 +63,13 @@
             switch(rg)
             {
                 case 3:
-                nm1[i]=getRndInteger(100,1000);
+                nm1[i]=getRndInteger(0,1000);
                   break;
                 case 2:
-                nm1[i]=getRndInteger(10,100);
+                nm1[i]=getRndInteger(0,100);
                   break;
                 default:
-                nm1[i]=getRndInteger(2,10);
+                nm1[i]=getRndInteger(0,10);
             }
             opr[i]=getRndInteger(0,4);
             if(opr[i]==0 || opr[i]==1) //puls/minus
@@ -84,13 +84,13 @@
                     nm2[i]=getRndInteger(10,100);
                       break;
                     default:
-                    nm2[i]=getRndInteger(2,10);
+                    nm2[i]=getRndInteger(1,10);
                 }
                 rst[i]=nm1[i]+nm2[i];
             }
             else
             {
-                nm2[i]=getRndInteger(2,10);
+                nm2[i]=getRndInteger(1,10);
                 rst[i]=nm1[i]*nm2[i];
             }
             
@@ -223,7 +223,7 @@
 <td><input type="range" min="1" max="3" value="2" class="slider" id="Range"></td>
 <tr>
 <table>
-<input type="checkbox" id="myCheck"> Decimal Point<br>
+<input type="checkbox" id="myCheck" checked> Decimal Point<br>
 
 <script>
     var slider = document.getElementById("Range");
