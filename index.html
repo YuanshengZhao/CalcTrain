@@ -201,12 +201,8 @@
         {
             for (i = 0; i < 30; i++)
             {
-                if(pwr[i]<0)
-                    rasstr=(Math.round(rst[i]*pow10(-pwr[i]))/pow10(-pwr[i])).toString()
-                else
-                    rasstr=rst[i].toString();
-
-                document.getElementById("ras"+i.toString(10)).innerHTML = /*rst[i].toString()+" "+pwr[i].toString()+" "+*/rasstr;
+                rasstr=(Math.round(rst[i]*pow10(-pwr[i]))/pow10(-pwr[i])).toString()
+                document.getElementById("ras"+i.toString(10)).innerHTML = /*rst[i].toString()+" "+pwr[i].toString()+" "+*/ rasstr;
 
                 rss=document.getElementById("rst"+i.toString(10)).value;
                 if(rss!="")
